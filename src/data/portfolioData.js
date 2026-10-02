@@ -17,7 +17,7 @@ export const personalInfo = {
   },
   summary:
     "Cloud and DevOps Engineering student with hands-on experience designing, deploying, and automating production-grade AWS infrastructure using Terraform, Docker, GitHub Actions, and Bash. Built ResQOps, a multi-region disaster recovery platform on AWS that delivers automated infrastructure failover in under 5 minutes with defined RTO and RPO targets.",
-  resumeUrl: "/Niladri_Tewari_Resume_2026.pdf",
+  resumeUrl: "/Niladri Tewari_Resume.pdf",
 };
 
 export const socialLinks = {
@@ -36,7 +36,7 @@ export const heroContent = {
     text: "Contact Me",
     href: "mailto:niladritewari86@gmail.com?subject=Hiring Inquiry – Portfolio&body=Hello Niladri,%0D%0A%0D%0AI came across your portfolio and would like to discuss an opportunity with you.%0D%0A%0D%0ALooking forward to hearing from you.%0D%0ABest Regards,",
   },
-  ctaResume: { text: "Download Resume", href: "/Niladri_Tewari_Resume_2026.pdf" },
+  ctaResume: { text: "Download Resume", href: "/Niladri Tewari_Resume.pdf" },
 };
 
 export const aboutContent = {
@@ -266,7 +266,7 @@ export const footerContent = {
     "CI/CD & Observability",
   ],
   credential: "B.Tech CSE (Cybersecurity) · CGPA 8.43",
-  copyright: `© ${new Date().getFullYear()} Niladri Tewari | Built with React`,
+  copyright: `© ${new Date().getFullYear()} Niladri Tewari`,
 };
 
 // EmailJS Configuration

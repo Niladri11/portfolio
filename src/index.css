@@ -1,38 +1,141 @@
 @import "tailwindcss";
 
 @theme {
-  --animate-float: float 6s ease-in-out infinite;
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-  }
+  --color-luxury-bg: #050505;
+  --color-luxury-bg-secondary: #080808;
+  --color-luxury-surface: #0D0D0D;
+  --color-luxury-surface-elevated: #111111;
+  --color-luxury-text-primary: #F5F1E8;
+  --color-luxury-text-secondary: #B2ADA4;
+  --color-luxury-text-muted: #77736C;
+  --color-luxury-gold: #C8A96B;
+  --color-luxury-gold-light: #E0C98A;
+  --color-luxury-gold-dark: #8F713D;
+  
+  --font-sans: 'Baskerville Old Face', 'Baskerville', 'Times New Roman', serif;
+  --font-signature: 'Brush Script MT', 'Great Vibes', cursive;
+  
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html {
   scroll-behavior: smooth;
+  background-color: var(--color-luxury-bg);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #000;
-  color: #fff;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
+  background-color: var(--color-luxury-bg);
+  color: var(--color-luxury-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }
 
-[data-aos="drop-bounce"] {
-  opacity: 0;
-}
-[data-aos="drop-bounce"].aos-animate {
-  animation: dropBounce 1.2s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
+/* Global Background Layering */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at top right, rgba(200, 169, 107, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(200, 169, 107, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -2;
 }
 
-@keyframes dropBounce {
-  0% { transform: translateY(-300px); opacity: 0; }
-  50% { transform: translateY(0); opacity: 1; }
-  65% { transform: translateY(-40px); opacity: 1; }
-  80% { transform: translateY(0); opacity: 1; }
-  90% { transform: translateY(-15px); opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(200, 169, 107, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 169, 107, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: -1;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  opacity: 0.8;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ----------------------------------------------------
+   Custom Cursor & Global Interactions
+---------------------------------------------------- */
+
+@media (pointer: fine) {
+  body, a, button, [role="button"], input, select, textarea {
+    cursor: none !important;
+  }
+}
+
+/* Global Click/Tap Response */
+a:active, button:active, [role="button"]:active {
+  transform: scale(0.98);
+  transition: transform 0.1s var(--ease-cinematic) !important;
+}
+
+/* Subtle gold link hover effect */
+.link-hover-gold {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s var(--ease-cinematic);
+}
+
+.link-hover-gold:hover {
+  color: var(--color-luxury-gold);
+}
+
+.link-hover-gold::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-luxury-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-cinematic);
+}
+
+.link-hover-gold:hover::after {
+  transform: scaleX(1);
+}
+
+html { scroll-behavior: smooth; }
+
+
+::selection {
+  background: var(--color-luxury-gold);
+  color: #000000;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-luxury-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-luxury-gold-dark);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-luxury-gold);
+}
+

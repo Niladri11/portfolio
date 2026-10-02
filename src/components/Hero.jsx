@@ -1,196 +1,339 @@
-import React, { useRef, useEffect, useState } from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import heroVideo from '../assets/hero video/niladri-hero.mp4';
-import { heroContent, socialLinks } from '../data/portfolioData';
+import React from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { personalInfo } from '../data/portfolioData';
+
+const easeCinematic = [0.22, 1, 0.36, 1];
+
+const TechnicalGraphics = ({ shouldReduceMotion, yParallax }) => (
+  <motion.div 
+    style={{ y: yParallax }}
+    className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
+  >
+    {/* Massive Rotating Cloud Infrastructure Astrolabe */}
+    <div className="absolute top-1/2 left-[25%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-[0.15] hidden md:block mix-blend-screen">
+      {/* Outer Ring */}
+      <motion.svg 
+        animate={shouldReduceMotion ? {} : { rotate: 360 }}
+        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+        viewBox="0 0 200 200" 
+        className="absolute inset-0 w-full h-full"
+      >
+        <circle cx="100" cy="100" r="95" fill="none" stroke="var(--color-luxury-gold)" strokeWidth="0.3" strokeDasharray="2 4" />
+        <circle cx="100" cy="100" r="90" fill="none" stroke="var(--color-luxury-gold)" strokeWidth="0.2" />
+        {/* Technical Ticks */}
+        {[...Array(36)].map((_, i) => (
+          <line key={i} x1="100" y1="5" x2="100" y2="8" stroke="var(--color-luxury-gold)" strokeWidth="0.5" transform={`rotate(${i * 10} 100 100)`} />
+        ))}
+      </motion.svg>
+
+      {/* Middle Counter-Rotating Ring */}
+      <motion.svg 
+        animate={shouldReduceMotion ? {} : { rotate: -360 }}
+        transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+        viewBox="0 0 200 200" 
+        className="absolute inset-0 w-full h-full"
+      >
+        <circle cx="100" cy="100" r="70" fill="none" stroke="var(--color-luxury-gold)" strokeWidth="0.3" strokeDasharray="1 6" />
+        <circle cx="100" cy="100" r="65" fill="none" stroke="var(--color-luxury-gold)" strokeWidth="0.5" strokeDasharray="15 5" />
+        {/* Orbital nodes */}
+        <circle cx="100" cy="35" r="2" fill="var(--color-luxury-gold)" />
+        <circle cx="100" cy="165" r="2" fill="var(--color-luxury-gold)" />
+        <circle cx="35" cy="100" r="2" fill="var(--color-luxury-gold)" />
+        <circle cx="165" cy="100" r="2" fill="var(--color-luxury-gold)" />
+      </motion.svg>
+
+      {/* Inner Fast Ring */}
+      <motion.svg 
+        animate={shouldReduceMotion ? {} : { rotate: 360 }}
+        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        viewBox="0 0 200 200" 
+        className="absolute inset-0 w-full h-full drop-shadow-[0_0_10px_rgba(200,169,107,0.5)]"
+      >
+        <circle cx="100" cy="100" r="45" fill="none" stroke="var(--color-luxury-gold)" strokeWidth="0.5" strokeDasharray="4 2" />
+        <circle cx="100" cy="100" r="30" fill="none" stroke="var(--color-luxury-gold)" strokeWidth="1" opacity="0.5" />
+        <circle cx="100" cy="100" r="15" fill="none" stroke="var(--color-luxury-gold)" strokeWidth="0.5" />
+        <circle cx="100" cy="100" r="3" fill="var(--color-luxury-gold)" />
+      </motion.svg>
+    </div>
+
+    {/* Abstract lines and markers - Left */}
+    <svg className="absolute top-[20%] left-[5%] w-64 h-64 opacity-20 hidden md:block" viewBox="0 0 100 100">
+      <motion.path 
+        initial={shouldReduceMotion ? { pathLength: 1 } : { pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.5, delay: 0.2, ease: easeCinematic }}
+        d="M0,50 L40,50 L50,60 L90,60" 
+        fill="none" 
+        stroke="var(--color-luxury-gold)" 
+        strokeWidth="0.5"
+      />
+      <motion.circle
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+        cx="90" cy="60" r="1.5" fill="var(--color-luxury-gold)"
+      />
+      <motion.text
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        animate={{ opacity: 0.6 }}
+        transition={{ duration: 1, delay: 1.0 }}
+        x="93" y="61.5" fontSize="3" fill="var(--color-luxury-gold)" className="font-mono tracking-widest"
+      >
+        SYS.01
+      </motion.text>
+    </svg>
+    
+    {/* Subtle connection path - Center Bottom */}
+    <svg className="absolute bottom-[10%] left-[30%] w-96 h-96 opacity-[0.15] hidden md:block" viewBox="0 0 200 200">
+      <motion.path 
+        initial={shouldReduceMotion ? { pathLength: 1 } : { pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 2, delay: 0.5, ease: easeCinematic }}
+        d="M0,150 L50,150 L80,100 L150,100" 
+        fill="none" 
+        stroke="var(--color-luxury-gold)" 
+        strokeWidth="0.5"
+      />
+    </svg>
+    
+    {/* Traveling gold point */}
+    {!shouldReduceMotion && (
+      <motion.div 
+        initial={{ x: 0, opacity: 0 }}
+        animate={{ x: 150, opacity: [0, 1, 0] }}
+        transition={{ duration: 3.5, delay: 1.5, repeat: Infinity, repeatDelay: 6, ease: "linear" }}
+        className="absolute top-[35%] left-[15%] w-[2px] h-[2px] bg-[var(--color-luxury-gold-bright)] rounded-full shadow-[0_0_8px_rgba(228,201,138,0.8)] hidden md:block"
+      />
+    )}
+  </motion.div>
+);
 
 const Hero = () => {
-  const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted] = useState(false);
+  const { scrollY } = useScroll();
+  const shouldReduceMotion = useReducedMotion();
+  
+  // Parallax effects
+  const portraitY = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 30]);
+  const textY = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 15]);
+  const bgTextY = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 45]);
+  const graphicsY = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 20]);
 
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: 'ease-out'
-    });
-    // Video does NOT autoplay anymore
-  }, []);
-
-  const toggleVideo = (e) => {
-    e.stopPropagation();
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsPlaying(true);
-      } else {
-        videoRef.current.pause();
-        setIsPlaying(false);
-      }
-    }
-  };
+  const resumeLink = personalInfo.resumeUrl || '#';
 
   return (
-    <section id="home" className="relative w-full h-screen overflow-hidden bg-black">
-      {/* Background Video */}
-      <video
-        ref={videoRef}
-        loop
-        muted={isMuted}
-        playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+    <section id="home" className="relative w-full min-h-screen overflow-hidden bg-[var(--color-luxury-bg)] flex items-center pt-24 md:pt-0">
+      
+      {/* 1. & 2. Background fade in & Gold atmosphere */}
+      <motion.div 
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.1, ease: easeCinematic }}
+        className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(200,169,107,0.05)_0%,transparent_70%)] pointer-events-none"
+      />
+      
+      {/* Diagonal Light Rays */}
+      <motion.div
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, delay: 0.5, ease: easeCinematic }}
+        className="absolute top-[-10%] left-[20%] w-[300px] h-[150%] bg-gradient-to-b from-[rgba(200,169,107,0.08)] to-transparent -rotate-45 blur-[40px] pointer-events-none z-0 mix-blend-screen"
+      />
+      
+      {/* Architectural lines - Top Right */}
+      <motion.div
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 0.2 }}
+        transition={{ duration: 1.5, delay: 0.8, ease: easeCinematic }}
+        className="absolute top-[15%] right-[20%] z-0 pointer-events-none hidden md:block"
       >
-        <source src={heroVideo} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+        <div className="absolute w-[1px] h-[150px] bg-gradient-to-b from-transparent via-[var(--color-luxury-gold)] to-transparent" />
+        <div className="absolute w-[150px] h-[1px] bg-gradient-to-r from-transparent via-[var(--color-luxury-gold)] to-transparent" />
+        {/* Nodes and corners */}
+        <div className="absolute top-[75px] left-[-2px] w-[5px] h-[5px] border border-[var(--color-luxury-gold)] rounded-full" />
+        <div className="absolute top-[0px] left-[75px] w-[3px] h-[3px] bg-[var(--color-luxury-gold)]" />
+        <div className="absolute top-[-10px] left-[-10px] w-[20px] h-[20px] border-t border-l border-[var(--color-luxury-gold)] opacity-50" />
+      </motion.div>
 
-      {/* Left Floating Social Bar for Large Screens */}
-      <div className="hidden lg:flex flex-col gap-6 fixed left-6 top-1/2 -translate-y-1/2 z-50 mix-blend-difference">
-        <a 
-          href={socialLinks.github} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-white/60 hover:text-white transition-all duration-300 transform hover:scale-125"
-          aria-label="GitHub"
-        >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-          </svg>
-        </a>
-        <a 
-          href={socialLinks.linkedin} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-white/60 hover:text-white transition-all duration-300 transform hover:scale-125"
-          aria-label="LinkedIn"
-        >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-          </svg>
-        </a>
-      </div>
+      {/* Architectural lines - Bottom Left */}
+      <motion.div
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 0.15 }}
+        transition={{ duration: 1.5, delay: 1.0, ease: easeCinematic }}
+        className="absolute bottom-[20%] left-[5%] z-0 pointer-events-none hidden md:block"
+      >
+        <div className="absolute w-[1px] h-[100px] bg-gradient-to-t from-transparent via-[var(--color-luxury-gold)] to-transparent" />
+        <div className="absolute top-[100px] w-[80px] h-[1px] bg-gradient-to-r from-transparent via-[var(--color-luxury-gold)] to-transparent" />
+        <div className="absolute top-[100px] left-[80px] w-[4px] h-[4px] bg-[var(--color-luxury-gold)] rounded-full" />
+        <div className="absolute top-[110px] left-[0px] text-[8px] font-mono text-[var(--color-luxury-gold)] tracking-widest">SYS.CORE.02</div>
+      </motion.div>
 
-      {/* Content Container */}
-      <div className="absolute inset-0 z-20 px-6 pb-20 md:pb-[8%] md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row justify-end md:justify-between items-start md:items-end text-left w-full">
+      {/* 3. Technical Graphics */}
+      <TechnicalGraphics shouldReduceMotion={shouldReduceMotion} yParallax={graphicsY} />
+
+      {/* 7. Portrait reveals from RIGHT to LEFT on the absolute right edge */}
+      <div className="absolute right-0 bottom-0 w-full md:w-[60%] lg:w-[55%] h-[60vh] md:h-[100vh] z-10 flex items-end justify-end pointer-events-none">
         
-        {/* Left Side: Text and Buttons */}
-        <div className="flex flex-col items-start text-left max-w-2xl w-full">
-          {/* Mobile / Hero inline socials */}
-          <div 
-            data-aos="fade-up"
-            data-aos-delay="100"
-            className="flex items-center gap-4 mb-4 lg:hidden"
-          >
-            <a href={socialLinks.github} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white" aria-label="GitHub">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" /></svg>
-            </a>
-            <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white" aria-label="LinkedIn">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
-            </a>
-          </div>
-
-          {/* Main Heading */}
-          <h1 
-            data-aos="fade-up"
-            className="text-white text-3xl md:text-5xl font-bold mb-4 tracking-tight"
-          >
-            {heroContent.greeting}, <br /> <span className="text-transparent [-webkit-text-stroke:1.5px_black]">{heroContent.titleHighlight}</span>
-          </h1>
-
-          {/* Subheading */}
-          <p 
-            data-aos="fade-up"
-            data-aos-delay="200"
-            className="text-white text-sm md:text-lg font-semibold mb-8 max-w-md drop-shadow-md"
-          >
-            {heroContent.subtitle}
-          </p>
-
-          {/* Buttons */}
-          <div 
-            data-aos="fade-up"
-            data-aos-delay="400"
-            className="flex flex-row flex-wrap items-center gap-3 w-full"
-          >
-            {/* Primary Button */}
-            <a 
-              href={heroContent.ctaPrimary.href}
-              className="px-4 py-2 md:px-6 md:py-2 text-xs md:text-base rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-md"
-            >
-              {heroContent.ctaPrimary.text}
-            </a>
-            
-            {/* Secondary Button - Glassmorphism style */}
-            <a 
-              href={heroContent.ctaSecondary.href}
-              className="px-4 py-2 md:px-6 md:py-2 text-xs md:text-base rounded-full bg-black/40 border border-white text-white font-semibold hover:bg-black/60 transition-all duration-300 backdrop-blur-md"
-            >
-              {heroContent.ctaSecondary.text}
-            </a>
-
-            {/* Resume Download Button */}
-            <a 
-              href={heroContent.ctaResume.href}
-              download
-              className="px-4 py-2 md:px-6 md:py-2 text-xs md:text-base rounded-full bg-transparent border border-white/50 text-white font-semibold hover:bg-white hover:text-black transition-all duration-300 backdrop-blur-md flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              {heroContent.ctaResume.text}
-            </a>
-          </div>
-        </div>
-
-        {/* Right Side: Play Video Button */}
-        <div 
-          data-aos="zoom-in"
-          data-aos-delay="600"
-          className="mt-8 md:mt-0 flex flex-row md:flex-col items-center gap-2 md:gap-3 cursor-pointer group self-start md:self-auto"
-          onClick={toggleVideo}
+        {/* 8. Golden Aura and Design behind portrait */}
+        <motion.div
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.4, delay: 1.4, ease: easeCinematic }}
+          className="absolute inset-0 z-0 mix-blend-screen pointer-events-none flex items-center justify-center"
         >
-          <div className="w-12 h-12 md:w-20 md:h-20 rounded-full border border-white/30 bg-black/20 backdrop-blur-md flex justify-center items-center group-hover:scale-110 group-hover:bg-[#ff2a2a] transition-all duration-500 shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_40px_rgba(255,42,42,0.6)]">
-            {!isPlaying || isMuted ? (
-              // Play Icon
-              <svg className="w-5 h-5 md:w-8 md:h-8 text-white ml-0.5 md:ml-1" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            ) : (
-              // Pause Icon
-              <svg className="w-5 h-5 md:w-8 md:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-              </svg>
-            )}
-          </div>
-          <span className="text-white text-[10px] md:text-xs font-bold tracking-widest uppercase opacity-70 group-hover:opacity-100 transition-opacity">
-            {!isPlaying || isMuted ? "Play Reel" : "Pause"}
-          </span>
-        </div>
+          {/* subtle gold particles/glow matching the background */}
+          <div className="absolute top-[20%] right-[10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,rgba(200,169,107,0.35)_0%,transparent_70%)] blur-[40px]" />
+          <div className="absolute bottom-[10%] right-[5%] w-[50%] h-[50%] bg-[radial-gradient(ellipse_at_center,rgba(200,169,107,0.25)_0%,transparent_70%)] blur-[50px]" />
+        </motion.div>
+
+        <motion.div 
+          style={{ y: portraitY }}
+          initial={shouldReduceMotion ? false : { clipPath: "inset(0 0 0 100%)", opacity: 0, scale: 1.03 }}
+          animate={{ clipPath: "inset(0 0 0 0%)", opacity: 1, scale: 1 }}
+          transition={{ duration: 1.1, delay: 1.0, ease: easeCinematic }}
+          className="relative w-full h-full max-w-[800px] flex items-end justify-end transition-all duration-700 ease-[0.22,1,0.36,1] hover:scale-[1.01] hover:drop-shadow-[0_0_20px_rgba(200,169,107,0.15)] pointer-events-auto z-10"
+        >
+          <img 
+            src="/images/niladri-hero-no-earring.jpg" 
+            alt="Niladri Tewari" 
+            className="w-full h-full object-cover object-center md:object-top"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, black 25%, black 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 25%, black 100%)',
+              filter: 'contrast(1.05) brightness(0.95) grayscale(5%) drop-shadow(0 0 20px rgba(0,0,0,0.5))'
+            }}
+          />
+        </motion.div>
+
       </div>
 
-      {/* Scroll Indicator */}
-      <div 
-        data-aos="fade-up"
-        data-aos-delay="800"
-        className="hidden md:block absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none"
-      >
-        <div className="animate-bounce">
-          <svg 
-            className="w-6 h-6 text-black drop-shadow-[0_1px_2px_rgba(255,255,255,0.6)]" 
-            fill="none" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth="3" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-12 flex h-full min-h-[calc(100vh-6rem)]">
+        
+        {/* LEFT: Main Content & Typography */}
+        <motion.div 
+          className="flex flex-col items-start justify-center text-left w-full md:w-[65%] pb-12 md:pb-0 z-30"
+        >
+          {/* "Hi, I'm" */}
+          <motion.p 
+            style={{ y: textY }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: easeCinematic }}
+            className="text-[var(--color-luxury-gold)] text-lg md:text-xl font-semibold tracking-wide mb-1"
           >
-            <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-          </svg>
-        </div>
+            Hi, I'm
+          </motion.p>
+
+          <div className="relative w-full mb-4 md:mb-6 pointer-events-none">
+            
+            {/* The heavy cinematic glow behind the name */}
+            <motion.div
+              initial={shouldReduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.5, delay: 0.8, ease: easeCinematic }}
+              className="absolute top-1/2 left-[10%] md:left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80%] h-[150%] bg-[radial-gradient(ellipse_at_center,rgba(220,180,100,0.25)_0%,transparent_60%)] blur-[40px] z-0 pointer-events-none"
+            />
+
+            {/* 5. NILADRI reveals upward */}
+            <motion.div
+              className="relative z-10"
+            >
+              <motion.h1 
+                initial={shouldReduceMotion ? false : { y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.6, ease: easeCinematic }}
+                className="text-[14vw] sm:text-7xl md:text-[8vw] font-black tracking-tighter leading-none"
+              >
+                <span className="bg-gradient-to-b from-[#FFFDF8] via-[#E8C881] to-[#8A6327] text-transparent bg-clip-text drop-shadow-[0_0_15px_rgba(200,169,107,0.4)]">
+                  NILADRI
+                </span>
+              </motion.h1>
+            </motion.div>
+
+            {/* 6. TEWARI outline reveals slightly later */}
+            <motion.div
+              className="md:-mt-5 relative z-10"
+            >
+              <motion.h2 
+                initial={shouldReduceMotion ? false : { y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.8, ease: easeCinematic }}
+                className="text-[14vw] sm:text-7xl md:text-[8vw] font-black tracking-tighter leading-none"
+                style={{ 
+                  WebkitTextStroke: '1px #A17B3A', 
+                  color: 'rgba(200,169,107,0.05)'
+                }}
+              >
+                TEWARI
+              </motion.h2>
+            </motion.div>
+          </div>
+
+          <motion.div style={{ y: textY }} className="relative z-10">
+            {/* 9. Cloud & DevOps Engineer appears */}
+            <motion.h3 
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.6, ease: easeCinematic }}
+              className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-wide mb-3"
+            >
+              Cloud & DevOps Engineer
+            </motion.h3>
+
+            {/* 10. Description appears */}
+            <motion.p 
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.8, ease: easeCinematic }}
+              className="text-gray-300 text-sm md:text-base font-light mb-8 max-w-lg leading-relaxed"
+            >
+              I build and automate cloud infrastructure, resilient systems and observability platforms on AWS.
+            </motion.p>
+
+            {/* 11. Buttons appear sequentially */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              <motion.a 
+                href="#projects"
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 2.0, ease: easeCinematic }}
+                className="w-full sm:w-auto px-7 py-3 rounded-md bg-gradient-to-b from-[#E8C881] to-[#C09A45] text-black font-bold text-center hover:brightness-110 transition-all duration-300 shadow-[0_0_15px_rgba(200,169,107,0.3)]"
+              >
+                View My Work &rarr;
+              </motion.a>
+              
+              <motion.a 
+                href="https://github.com/Niladri11"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 2.15, ease: easeCinematic }}
+                className="w-full sm:w-auto px-7 py-3 rounded-md bg-transparent border border-[var(--color-luxury-gold-dark)] text-white font-medium text-center hover:bg-[var(--color-luxury-gold)]/10 transition-all duration-300"
+              >
+                GitHub
+              </motion.a>
+
+              <motion.a 
+                href="https://www.linkedin.com/in/niladritewari"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 2.3, ease: easeCinematic }}
+                className="w-full sm:w-auto px-7 py-3 rounded-md bg-transparent border border-[var(--color-luxury-gold-dark)] text-white font-medium text-center hover:bg-[var(--color-luxury-gold)]/10 transition-all duration-300"
+              >
+                LinkedIn
+              </motion.a>
+            </div>
+
+          </motion.div>
+
+        </motion.div>
       </div>
+
     </section>
   );
 };
 
 export default Hero;
+

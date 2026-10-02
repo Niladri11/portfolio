@@ -1,231 +1,56 @@
-import React, { useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { emailjsConfig, personalInfo, socialLinks } from '../data/portfolioData';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { personalInfo } from '../data/portfolioData';
 
 const Contact = () => {
-  const ref = useRef(null);
-  const formRef = useRef(null);
-  const [status, setStatus] = useState('idle'); // idle, sending, success, error
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-  
-  // Parallax translation for the big text
-  const y = useTransform(scrollYProgress, [0, 1], ["-20%", "30%"]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (status === 'sending') return; // Prevent duplicate submissions
-
-    setStatus('sending');
-
-    const form = formRef.current;
-    const firstName = form.querySelector('#firstName')?.value || '';
-    const lastName = form.querySelector('#lastName')?.value || '';
-    const email = form.querySelector('#email')?.value || '';
-    const message = form.querySelector('#message')?.value || '';
-
-    // Validate inputs
-    if (!firstName.trim() || !email.trim() || !message.trim()) {
-      setStatus('error');
-      setTimeout(() => setStatus('idle'), 3000);
-      return;
-    }
-
-    // Check if EmailJS is configured (checking both placeholder values and falsy states)
-    const isConfigured = 
-      emailjsConfig.serviceId && 
-      emailjsConfig.serviceId !== 'YOUR_EMAILJS_SERVICE_ID' &&
-      emailjsConfig.templateId && 
-      emailjsConfig.templateId !== 'YOUR_EMAILJS_TEMPLATE_ID' &&
-      emailjsConfig.publicKey && 
-      emailjsConfig.publicKey !== 'YOUR_EMAILJS_PUBLIC_KEY';
-
-    if (!isConfigured) {
-      // EmailJS not configured — fallback to prefilled mailto
-      const mailtoLink = `mailto:${personalInfo.emails.primary}?subject=Portfolio Contact from ${firstName} ${lastName}&body=${encodeURIComponent(`From: ${firstName} ${lastName}\nEmail: ${email}\n\n${message}`)}`;
-      window.open(mailtoLink, '_blank');
-      setStatus('success');
-      formRef.current.reset();
-      setTimeout(() => setStatus('idle'), 3000);
-      return;
-    }
-
-    // EmailJS integration
-    try {
-      const emailjs = await import('@emailjs/browser');
-      await emailjs.sendForm(
-        emailjsConfig.serviceId,
-        emailjsConfig.templateId,
-        formRef.current,
-        emailjsConfig.publicKey
-      );
-      setStatus('success');
-      formRef.current.reset();
-    } catch (error) {
-      console.error('EmailJS Error:', error);
-      setStatus('error');
-    }
-
-    setTimeout(() => setStatus('idle'), 4000);
-  };
-
   return (
-    <section ref={ref} id="contact" className="bg-[#0a0a0a] w-full min-h-screen relative overflow-hidden flex items-end pt-32 pb-0 md:pb-0 border-t border-gray-900">
-      {/* Huge Background Text */}
-      <motion.div 
-        style={{ y }}
-        className="absolute top-0 left-0 w-full h-full flex flex-col justify-start items-center overflow-hidden pointer-events-none z-0 pt-16 md:pt-12"
-      >
-        <h1 
-          className="text-[25vw] leading-[0.75] font-black text-white uppercase tracking-tighter select-none scale-y-[1.6] origin-top"
-          style={{ fontFamily: "'Impact', 'Arial Black', sans-serif" }}
-        >
-          Contact
-        </h1>
-      </motion.div>
+    <section id="contact" className="bg-[#050505] pt-40 pb-40 px-6 md:px-12 w-full relative font-sans border-t border-white/5 overflow-hidden flex items-center justify-center min-h-[70vh]">
+      
+      {/* Background Aura */}
+      <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,rgba(200,169,107,0.05)_0%,rgba(0,0,0,0)_70%)] pointer-events-none z-0"></div>
 
-      {/* Form Card Overlay */}
-      <div className="relative z-10 w-full flex justify-end items-end">
-        <div 
-          data-aos="fade-up"
-          className="bg-[#ff2a2a] w-full md:w-[85%] lg:w-[75%] p-8 md:p-16 text-white flex flex-col justify-between"
+      <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center text-center">
+        
+        {/* Section Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col items-center"
         >
-          <div className="flex flex-col sm:flex-row justify-between items-start gap-8 mb-12">
-            <div className="text-xs font-bold tracking-[0.2em] uppercase opacity-90">
-              Reach Me
-            </div>
-            {/* GitHub Quick Link */}
-            <a 
-              href={socialLinks.github} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex items-center gap-2 text-xs font-black uppercase tracking-wider bg-white/10 hover:bg-white hover:text-red-600 border border-white/20 px-4 py-2 rounded-full transition-all duration-300"
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" /></svg>
-              View GitHub
-            </a>
+          <div className="flex items-center gap-4 mb-8">
+            <div className="h-[1px] w-8 bg-[#C8A96B]/50"></div>
+            <span className="text-[10px] font-mono text-[#AAA59C] tracking-[0.2em] uppercase">04. Next Steps</span>
+            <div className="h-[1px] w-8 bg-[#C8A96B]/50"></div>
           </div>
+          
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-[#F5F1E8] mb-8 tracking-tight uppercase leading-none">
+            Get In Touch
+          </h2>
+          
+          <p className="text-[#AAA59C] text-sm md:text-base max-w-xl leading-relaxed mb-16">
+            I am currently open to new opportunities, freelance projects, and exciting collaborations. My inbox is always open. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+          </p>
 
-          <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-12 md:gap-16 w-full">
-            <div className="flex flex-col md:flex-row gap-12 md:gap-20 w-full">
-              {/* Left Column */}
-              <div className="flex-1 flex flex-col gap-10">
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    id="firstName" 
-                    name="first_name"
-                    placeholder="First Name" 
-                    required
-                    className="w-full bg-transparent border-b border-white/40 pb-3 text-lg focus:outline-none focus:border-white transition-colors placeholder-white font-medium rounded-none"
-                  />
-                </div>
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    id="lastName" 
-                    name="last_name"
-                    placeholder="Last Name" 
-                    className="w-full bg-transparent border-b border-white/40 pb-3 text-lg focus:outline-none focus:border-white transition-colors placeholder-white font-medium rounded-none"
-                  />
-                </div>
-                <div className="relative">
-                  <input 
-                    type="email" 
-                    id="email" 
-                    name="user_email"
-                    placeholder="Email" 
-                    required
-                    className="w-full bg-transparent border-b border-white/40 pb-3 text-lg focus:outline-none focus:border-white transition-colors placeholder-white font-medium rounded-none"
-                  />
-                </div>
-              </div>
-
-              {/* Right Column */}
-              <div className="flex-1 flex flex-col">
-                <div className="relative h-full flex flex-col">
-                  <textarea 
-                    id="message" 
-                    name="message"
-                    placeholder="Type your message here" 
-                    required
-                    className="w-full h-full min-h-[120px] bg-transparent border-b border-white/40 pb-3 text-lg focus:outline-none focus:border-white transition-colors placeholder-white font-medium resize-none rounded-none"
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Section */}
-            <div className="flex flex-col md:flex-row gap-12 mt-4">
-              {/* Left text */}
-              <div className="flex-1 flex items-start gap-4 text-sm font-medium text-white/90">
-                <input 
-                  type="checkbox" 
-                  id="permission" 
-                  className="mt-1 w-4 h-4 rounded-sm border-white/40 bg-transparent text-white focus:ring-white focus:ring-offset-0 focus:ring-offset-transparent cursor-pointer" 
-                  style={{ accentColor: "white" }}
-                />
-                <label htmlFor="permission" className="cursor-pointer max-w-[280px] leading-snug">
-                  I give permission to contact me at this email address.
-                </label>
-              </div>
-
-              {/* Right text & button */}
-              <div className="flex-1 flex flex-col gap-8 text-xs text-white/70 font-medium">
-                <p className="leading-relaxed max-w-[400px]">
-                  Your message will be sent directly to my inbox. I typically respond within 24-48 hours.
-                </p>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-6">
-                  <p className="max-w-[250px] leading-relaxed">
-                    For urgent inquiries, reach me at <a href={`mailto:${personalInfo.emails.primary}`} className="underline hover:text-white transition-colors">{personalInfo.emails.primary}</a>
-                  </p>
-                  
-                  <button 
-                    type="submit" 
-                    disabled={status === 'sending'}
-                    className={`px-8 py-3 rounded-full border border-white/40 text-white font-bold flex items-center justify-center gap-3 transition-all duration-300 group whitespace-nowrap self-start sm:self-auto ${
-                      status === 'sending' 
-                        ? 'opacity-50 cursor-not-allowed bg-white/10' 
-                        : status === 'success'
-                        ? 'bg-green-600 border-green-500 text-white shadow-[0_0_20px_rgba(22,163,74,0.4)]'
-                        : status === 'error'
-                        ? 'bg-red-800 border-red-700 text-white'
-                        : 'hover:bg-white hover:text-[#ff2a2a]'
-                    }`}
-                  >
-                    {status === 'sending' ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        Sending...
-                      </span>
-                    ) : status === 'success' ? (
-                      <span className="flex items-center gap-2">
-                        Sent Successfully ✓
-                      </span>
-                    ) : status === 'error' ? (
-                      <span className="flex items-center gap-2">
-                        Failed — Try Again
-                      </span>
-                    ) : 'Send Message'}
-                    
-                    {status === 'idle' && (
-                      <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-
-        </div>
+          <a 
+            href={`mailto:${personalInfo.emails.primary}`}
+            className="group relative inline-flex items-center justify-center px-10 py-5 font-bold tracking-widest text-[#F5F1E8] uppercase overflow-hidden border border-[#C8A96B]/30 hover:border-[#C8A96B] rounded-sm transition-all duration-500 bg-[#0A0A0A] shadow-[0_0_20px_rgba(200,169,107,0.05)] hover:shadow-[0_0_30px_rgba(200,169,107,0.15)]"
+          >
+            <span className="absolute inset-0 w-full h-full bg-[#C8A96B]/5 group-hover:bg-[#C8A96B]/10 transition-colors duration-500"></span>
+            <span className="relative z-10 flex items-center gap-4">
+              Say Hello
+              <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform text-[#C8A96B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </span>
+          </a>
+          
+          <p className="mt-12 text-[10px] font-mono text-[#AAA59C]/50 tracking-widest uppercase flex items-center justify-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96B]/50"></span>
+            Strictly legitimate inquiries only. No automated spam.
+          </p>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,111 +1,237 @@
 import React from 'react';
-import stackImage from '../assets/about/niladri-avatar.png';
-import { aboutContent } from '../data/portfolioData';
+import { motion, useReducedMotion } from 'framer-motion';
 
-// Tech stack SVG icons rendered inline for crisp rendering
-const AwsIcon = () => (
-  <div className="flex flex-col items-center gap-2">
-    <svg className="w-16 h-16 md:w-20 md:h-20" viewBox="0 0 128 128">
-      <path fill="#FF9900" d="M36.4 66.9c0 1.6.2 2.9.5 3.8.3.9.7 2 1.4 3.1.2.4.3.7.3 1-.1.5-.4.9-.9 1.4l-3 2c-.4.3-.9.4-1.3.4-.5 0-1-.2-1.4-.7-.6-.7-1.2-1.4-1.6-2.1-.5-.8-.9-1.7-1.5-2.8-3.7 4.3-8.3 6.5-13.9 6.5-4 0-7.2-1.1-9.5-3.4-2.3-2.3-3.5-5.4-3.5-9.2 0-4.1 1.4-7.4 4.4-9.9 2.9-2.5 6.8-3.7 11.8-3.7 1.6 0 3.3.1 5.1.4 1.7.2 3.5.6 5.4 1v-3.5c0-3.6-.8-6.2-2.3-7.6-1.5-1.5-4.1-2.2-7.8-2.2-1.7 0-3.4.2-5.2.6-1.8.4-3.5 1-5.2 1.7-.8.3-1.3.5-1.7.6-.4.1-.6.2-.8.2-.7 0-1.1-.5-1.1-1.5V38.7c0-.8.1-1.4.4-1.7.3-.4.7-.7 1.4-1 1.7-.9 3.7-1.6 6.1-2.1 2.4-.6 4.9-.9 7.6-.9 5.8 0 10 1.3 12.7 4 2.7 2.6 4 6.6 4 12v15.9h.1zm-19.2 7.2c1.6 0 3.2-.3 4.9-.9 1.7-.6 3.3-1.7 4.6-3.2.8-.9 1.4-2 1.7-3.1.3-1.2.5-2.6.5-4.2v-2c-1.4-.3-2.9-.6-4.4-.8-1.6-.2-3.1-.3-4.6-.3-3.3 0-5.7.6-7.3 1.9-1.6 1.3-2.4 3.1-2.4 5.6 0 2.3.6 4 1.8 5.2 1.1 1.2 2.8 1.8 5.2 1.8zm38-4.5c-.9 0-1.5-.2-1.9-.5-.4-.3-.7-1-1-1.9L40.5 34.6c-.3-1-.5-1.6-.5-1.9 0-.8.4-1.2 1.2-1.2h4.9c1 0 1.6.2 2 .5.4.3.6 1 .9 1.9l8.5 33.5 7.9-33.5c.2-1 .5-1.6.9-1.9.4-.3 1.1-.5 2-.5h4c1 0 1.6.2 2 .5.4.3.7 1 .9 1.9l8 33.9 8.8-33.9c.3-1 .6-1.6.9-1.9.4-.3 1-.5 2-.5h4.6c.8 0 1.3.4 1.3 1.2 0 .2 0 .5-.1.8-.1.3-.2.7-.4 1.2L88.6 68.8c-.3 1-.6 1.6-1 1.9-.4.3-1 .5-1.9.5h-4.3c-1 0-1.6-.2-2-.5-.4-.4-.7-1-.9-2l-7.8-32.7L63 68.7c-.2 1-.5 1.6-.9 2-.4.4-1.1.5-2 .5h-4.3z"/>
-      <path fill="#FF9900" d="M110 87.6c-9.7 7.2-23.8 11-35.9 11-17 0-32.3-6.3-43.9-16.7-.9-.8-.1-1.9 1-1.3 12.6 7.3 28.1 11.8 44.2 11.8 10.8 0 22.7-2.3 33.7-6.9 1.6-.7 3 1.1 1.4 2.3l-.5-.2zM114.1 82.9c-1.2-1.6-8.2-.8-11.4-.4-.9.1-1.1-.7-.2-1.3 5.6-3.9 14.7-2.8 15.8-1.5 1.1 1.4-.3 10.5-5.5 14.9-.8.7-1.6.3-1.2-.6 1.2-2.9 3.7-9.5 2.5-11.1z"/>
-    </svg>
-    <span className="text-xs font-bold text-white/70 uppercase tracking-wider">AWS</span>
+const easeCinematic = [0.22, 1, 0.36, 1];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeCinematic } }
+};
+
+const cards = [
+  {
+    number: "01",
+    title: "CLOUD INFRASTRUCTURE",
+    desc: "Building and automating AWS infrastructure with Terraform and Docker.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5 text-[var(--color-luxury-gold)] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+      </svg>
+    )
+  },
+  {
+    number: "02",
+    title: "RELIABLE SYSTEMS",
+    desc: "Exploring disaster recovery, monitoring, and resilient cloud architectures.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5 text-[var(--color-luxury-gold)] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      </svg>
+    )
+  },
+  {
+    number: "03",
+    title: "DEVOPS AUTOMATION",
+    desc: "Designing automated CI/CD pipelines and infrastructure as code to eliminate manual operations.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5 text-[var(--color-luxury-gold)] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    )
+  }
+];
+
+const CapabilityCard = ({ number, title, desc, icon }) => (
+  <div className="group relative w-full bg-[#030303] border border-[var(--color-luxury-gold)]/20 p-8 hover:-translate-y-[2px] transition-all duration-300 ease-out hover:border-[var(--color-luxury-gold)]/60 hover:shadow-[0_0_20px_rgba(200,169,107,0.1)] overflow-hidden">
+    
+    {/* Subtle Background Glow */}
+    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(200,169,107,0.05)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+    <div className="flex justify-between items-start mb-10 relative z-10">
+      <span className="text-xs font-mono text-[var(--color-luxury-gold)]/60 group-hover:text-[var(--color-luxury-gold)] transition-colors tracking-widest">{number}</span>
+      <div className="p-2 border border-[var(--color-luxury-gold)]/10 rounded-sm bg-[#050505] group-hover:border-[var(--color-luxury-gold)]/30 group-hover:bg-[var(--color-luxury-gold)]/10 transition-all duration-300">
+        {icon}
+      </div>
+    </div>
+    
+    <h3 className="text-sm font-bold text-[#AAA59C] group-hover:text-[#F5F1E8] tracking-widest uppercase mb-4 transition-colors relative z-10">
+      {title}
+    </h3>
+    
+    <p className="text-[13px] md:text-sm text-[#81796D] font-light leading-[1.7] group-hover:text-[#AAA59C] transition-colors relative z-10">
+      {desc}
+    </p>
+
+    {/* Corner accents */}
+    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[var(--color-luxury-gold)]/0 group-hover:border-[var(--color-luxury-gold)]/60 transition-all duration-300 pointer-events-none" />
+    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[var(--color-luxury-gold)]/0 group-hover:border-[var(--color-luxury-gold)]/60 transition-all duration-300 pointer-events-none" />
   </div>
 );
 
-const TerraformIcon = () => (
-  <div className="flex flex-col items-center gap-2">
-    <svg className="w-16 h-16 md:w-20 md:h-20" viewBox="0 0 128 128">
-      <path fill="#844FBA" d="M77.9 22.2 45.7 3.5v37.4l32.2 18.6z"/>
-      <path fill="#844FBA" d="M80.9 59.5v37.4l32.2-18.6V40.9z"/>
-      <path fill="#844FBA" d="M14.9 41.1v37.4L47 96.9V59.5z"/>
-      <path fill="#844FBA" d="M45.7 60.8v37.4l32.2 18.6v-37.4z"/>
-    </svg>
-    <span className="text-xs font-bold text-white/70 uppercase tracking-wider">Terraform</span>
-  </div>
-);
+const TechnicalIllustration = () => {
+  const shouldReduceMotion = useReducedMotion();
+  
+  return (
+    <motion.div variants={itemVariants} className="relative w-full max-w-[500px] h-[350px] md:h-[450px] flex items-center justify-center">
+      {/* Enhanced Background glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.15)_0%,transparent_60%)] blur-[40px] pointer-events-none" />
+      
+      {/* SVG Blueprint */}
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 400">
+        
+        {/* Subtle grid background */}
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle cx="1" cy="1" r="0.5" fill="#F5D88D" opacity="0.15" />
+        </pattern>
+        <rect width="100%" height="100%" fill="url(#grid)" />
 
-const DockerIcon = () => (
-  <div className="flex flex-col items-center gap-2">
-    <svg className="w-16 h-16 md:w-20 md:h-20" viewBox="0 0 128 128">
-      <path fill="#2496ED" d="M124.5 51.7c-3.7-2.6-11.9-3.6-18.4-2.4-.8-6.4-4.4-11.9-10.9-16.8l-2.4-1.6-1.6 2.4c-3.1 4.7-4.6 11.2-4.1 17.3.2 2.3.9 6.4 3.2 10-2 1.1-6 2.6-11.3 2.6H2.4l-.3 1.7c-.9 5.6-.9 23 10.5 32.4 8.6 7.1 21.4 10.6 38 10.6 36.4 0 63.3-16.8 76-47.3 5 .1 15.6.1 21-10.4.1-.2.4-.9 1.3-3l.5-1.4-1.3-.9zM40.5 51.3H26.9v13.6h13.6V51.3zm17.6 0H44.5v13.6h13.6V51.3zm17.6 0H62.1v13.6h13.6V51.3zM40.5 33.7H26.9v13.6h13.6V33.7zm17.6 0H44.5v13.6h13.6V33.7zm17.6 0H62.1v13.6h13.6V33.7zm17.6 0H79.7v13.6h13.6V33.7zM40.5 16.1H26.9v13.6h13.6V16.1zm17.6 0H44.5v13.6h13.6V16.1z"/>
-    </svg>
-    <span className="text-xs font-bold text-white/70 uppercase tracking-wider">Docker</span>
-  </div>
-);
+        {/* Animated Rings around CLOUD node */}
+        <motion.circle cx="200" cy="70" r="16" fill="none" stroke="#F5D88D" strokeWidth="0.5" strokeDasharray="2 4"
+          initial={{ rotate: 0 }}
+          animate={shouldReduceMotion ? {} : { rotate: 360, transformOrigin: "200px 70px" }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="opacity-50"
+        />
+        <motion.circle cx="200" cy="70" r="22" fill="none" stroke="#F5D88D" strokeWidth="0.2"
+          initial={{ scale: 1, opacity: 0.5 }}
+          animate={shouldReduceMotion ? {} : { scale: 1.2, opacity: 0 }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
+        />
+
+        {/* Connection Lines */}
+        <motion.g
+          initial={shouldReduceMotion ? false : { pathLength: 0, opacity: 0 }}
+          whileInView={{ pathLength: 1, opacity: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 1.5, ease: easeCinematic, delay: 0.4 }}
+          stroke="#C8A96B"
+          strokeWidth="0.75"
+          fill="none"
+          className="opacity-40"
+        >
+          {/* Main vertical stem */}
+          <path d="M 200 70 L 200 130" />
+          {/* Branch to AWS and Terraform */}
+          <path d="M 200 130 L 120 190" />
+          <path d="M 200 130 L 280 190" />
+          {/* Converge to Docker */}
+          <path d="M 120 190 L 200 250" />
+          <path d="M 280 190 L 200 250" />
+          {/* Down to Observability */}
+          <path d="M 200 250 L 200 310" />
+          {/* Branch to Prom/Grafana */}
+          <path d="M 200 310 L 140 360" />
+          <path d="M 200 310 L 260 360" />
+        </motion.g>
+
+        {/* Nodes and Labels */}
+        <motion.g
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 1, ease: easeCinematic, delay: 0.8 }}
+        >
+          {/* CLOUD */}
+          <circle cx="200" cy="70" r="3" fill="#C8A96B" className="opacity-80" />
+          <circle cx="200" cy="70" r="8" fill="none" stroke="#C8A96B" strokeWidth="0.5" className="opacity-40" />
+          <text x="200" y="52" fill="#F5F1E8" fontSize="10" textAnchor="middle" className="font-mono tracking-widest opacity-90">CLOUD</text>
+          
+          {/* AWS & TERRAFORM */}
+          <circle cx="120" cy="190" r="3" fill="#C8A96B" className="opacity-80" />
+          <rect x="75" y="180" width="35" height="18" fill="none" stroke="#C8A96B" strokeWidth="0.5" className="opacity-30" />
+          <text x="92.5" y="193" fill="#AAA59C" fontSize="9" textAnchor="middle" className="font-mono tracking-wider">AWS</text>
+          
+          <circle cx="280" cy="190" r="3" fill="#C8A96B" className="opacity-80" />
+          <rect x="290" y="180" width="65" height="18" fill="none" stroke="#C8A96B" strokeWidth="0.5" className="opacity-30" />
+          <text x="322.5" y="193" fill="#AAA59C" fontSize="9" textAnchor="middle" className="font-mono tracking-wider">TERRAFORM</text>
+
+          {/* DOCKER */}
+          <circle cx="200" cy="250" r="3" fill="#C8A96B" className="opacity-80" />
+          <text x="200" y="270" fill="#AAA59C" fontSize="9" textAnchor="middle" className="font-mono tracking-wider">DOCKER</text>
+          
+          {/* OBSERVABILITY */}
+          <circle cx="200" cy="310" r="3" fill="#C8A96B" className="opacity-80" />
+          <text x="200" y="295" fill="#AAA59C" fontSize="9" textAnchor="middle" className="font-mono tracking-widest">OBSERVABILITY</text>
+
+          {/* PROMETHEUS & GRAFANA */}
+          <circle cx="140" cy="360" r="2.5" fill="#C8A96B" className="opacity-60" />
+          <text x="140" y="375" fill="#8C6E3B" fontSize="8" textAnchor="middle" className="font-mono tracking-wider">PROMETHEUS</text>
+          
+          <circle cx="260" cy="360" r="2.5" fill="#C8A96B" className="opacity-60" />
+          <text x="260" y="375" fill="#8C6E3B" fontSize="8" textAnchor="middle" className="font-mono tracking-wider">GRAFANA</text>
+        </motion.g>
+      </svg>
+      
+      {/* Decorative Corner Elements */}
+      <div className="absolute top-4 right-4 w-8 h-8 border-t border-r border-[var(--color-luxury-gold)] opacity-20 pointer-events-none" />
+      <div className="absolute bottom-4 left-4 w-8 h-8 border-b border-l border-[var(--color-luxury-gold)] opacity-20 pointer-events-none" />
+      <div className="absolute top-4 left-4 w-1 h-1 bg-[var(--color-luxury-gold)] opacity-30 pointer-events-none" />
+      <div className="absolute bottom-4 right-4 w-1 h-1 bg-[var(--color-luxury-gold)] opacity-30 pointer-events-none" />
+    </motion.div>
+  );
+};
 
 const About = () => {
   return (
-    <section id="about" className="bg-[#ff2a2a] pt-20 pb-40 px-6 md:px-12 w-full relative overflow-hidden font-sans">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-start">
+    <section id="about" className="relative w-full min-h-screen bg-gradient-to-b from-[#050505] to-[#0A0A0A] py-24 md:py-32 px-6 md:px-12 border-t border-[#111] overflow-hidden flex items-center">
+      
+      {/* Subtle Background Lines */}
+      <div className="absolute inset-0 pointer-events-none opacity-20">
+        <div className="absolute left-[5%] md:left-[10%] top-0 w-[1px] h-full bg-gradient-to-b from-transparent via-[var(--color-luxury-gold)] to-transparent opacity-10" />
+        <div className="absolute right-[5%] md:right-[10%] top-0 w-[1px] h-full bg-gradient-to-b from-transparent via-[var(--color-luxury-gold)] to-transparent opacity-10" />
+      </div>
+
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="max-w-7xl mx-auto flex flex-col z-10 relative w-full"
+      >
         
-        {/* Left Side: ID Badge and Skills */}
-        <div className="flex flex-col items-center w-full md:w-[350px] shrink-0 mt-12 md:mt-0">
+        {/* TOP ROW: Text & Blueprint */}
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-8 items-center lg:items-start mb-24 md:mb-32">
           
-          <div data-aos="drop-bounce" className="relative flex justify-center w-full">
-            {/* Lanyard string */}
-            <div className="absolute -top-32 left-1/2 w-3 h-40 bg-black transform -translate-x-1/2 shadow-inner z-0"></div>
-            {/* Lanyard clip */}
-            <div className="absolute -top-6 left-1/2 w-6 h-12 bg-gray-300 rounded border border-gray-400 transform -translate-x-1/2 z-10 shadow-[0_2px_10px_rgba(0,0,0,0.3)]"></div>
+          {/* LEFT: About Text */}
+          <div className="flex-1 w-full lg:max-w-xl flex flex-col justify-center pt-8 md:pt-16">
+            <motion.div variants={itemVariants} className="flex items-center gap-4 mb-8">
+              <div className="w-8 h-[1px] bg-[var(--color-luxury-gold)] opacity-60" />
+              <h2 className="text-sm md:text-base font-bold text-[#F5F1E8] uppercase tracking-[0.25em]">
+                ABOUT ME
+              </h2>
+            </motion.div>
             
-            {/* Badge Card */}
-            <div className="bg-gray-900 w-full max-w-[280px] rounded-2xl p-3 shadow-[0_20px_40px_rgba(0,0,0,0.4)] relative z-20 transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-              {/* Cutout Hole */}
-              <div className="absolute -top-3 left-1/2 w-16 h-6 bg-gray-900 rounded-t-xl transform -translate-x-1/2 flex justify-center items-center">
-                <div className="w-8 h-2 bg-black/30 rounded-full shadow-inner"></div>
-              </div>
-              {/* Image Container */}
-              <div className="w-full aspect-[3/4] overflow-hidden rounded-xl bg-gray-800 border-2 border-transparent">
-                <img 
-                  src={stackImage} 
-                  alt="Niladri Tewari — Cloud & DevOps Engineer" 
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-            </div>
+            <motion.p variants={itemVariants} className="text-[#AAA59C] text-base md:text-lg font-light leading-[1.9] tracking-wide">
+              I'm a Computer Science engineering student focused on Cloud, DevOps, and infrastructure automation. I build hands-on systems using AWS, Terraform, Docker, and observability tools, with a foundation in cybersecurity and networking. I design and automate production-grade infrastructure—<span className="text-[#F5D88D] font-medium drop-shadow-[0_0_8px_rgba(245,216,141,0.5)]">built for failure, not just for uptime.</span>
+            </motion.p>
           </div>
 
-        </div>
-
-        {/* Right Side: Info Content */}
-        <div data-aos="fade-left" data-aos-delay="200" className="flex-1 text-white mt-8 md:mt-0 relative z-20">
-          
-          <h2 className="text-4xl md:text-5xl font-black text-black mb-4">{aboutContent.heading}</h2>
-          <p 
-            className="text-lg font-bold mb-12 leading-relaxed max-w-3xl text-red-50"
-            dangerouslySetInnerHTML={{ __html: aboutContent.bio }}
-          />
-
-          {/* Horizontal Skills Row */}
-          <div className="flex items-center gap-10 mt-8">
-            <div data-aos="zoom-in" data-aos-delay="300" className="hover:scale-110 transition-transform duration-300 cursor-pointer drop-shadow-2xl">
-              <AwsIcon />
-            </div>
-            <div data-aos="zoom-in" data-aos-delay="450" className="hover:scale-110 transition-transform duration-300 cursor-pointer drop-shadow-2xl">
-              <TerraformIcon />
-            </div>
-            <div data-aos="zoom-in" data-aos-delay="600" className="hover:scale-110 transition-transform duration-300 cursor-pointer drop-shadow-2xl">
-              <DockerIcon />
-            </div>
+          {/* RIGHT: Blueprint */}
+          <div className="flex-1 w-full flex justify-center lg:justify-end mt-8 lg:mt-0">
+            <TechnicalIllustration />
           </div>
-
         </div>
-      </div>
 
-      {/* Torn paper divider at bottom */}
-      <div className="absolute bottom-0 left-0 w-full pointer-events-none z-30 transform translate-y-1">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-12 md:h-20 fill-white">
-          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,119.62,189.5,99.8,242.79,81.82,282.88,63.6,321.39,56.44Z"></path>
-        </svg>
-      </div>
+        {/* BOTTOM ROW: Capabilities */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+          {cards.map((card, idx) => (
+            <CapabilityCard key={idx} {...card} />
+          ))}
+        </motion.div>
 
-      {/* Decorative stars */}
-      <div className="absolute top-10 right-10 md:right-20 text-black opacity-30 animate-pulse">
-        <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0l2.5 8.5L23 12l-8.5 2.5L12 23l-2.5-8.5L1 12l8.5-2.5z"/></svg>
-      </div>
-      <div className="absolute bottom-32 left-4 md:left-20 text-black opacity-30 animate-pulse" style={{ animationDelay: '1s' }}>
-        <svg className="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0l2.5 8.5L23 12l-8.5 2.5L12 23l-2.5-8.5L1 12l8.5-2.5z"/></svg>
-      </div>
+      </motion.div>
     </section>
   );
 };

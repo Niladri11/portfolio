@@ -1,52 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { personalInfo } from '../data/portfolioData';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+
+const easeCinematic = [0.22, 1, 0.36, 1];
 
 const Preloader = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    // Wait for the water fill animation (1.5s) + a small pause (0.5s)
-    // before the shutter goes up smoothly.
+    // If reduced motion is preferred, completely skip the preloader.
+    if (shouldReduceMotion) {
+      setIsLoading(false);
+      return;
+    }
+
+    // Complete opening sequence takes approximately ~2.4 seconds
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2200);
+    }, 2400);
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [shouldReduceMotion]);
+
+  if (shouldReduceMotion && isLoading) return null;
 
   return (
     <AnimatePresence>
       {isLoading && (
         <motion.div
           key="preloader"
-          initial={{ y: 0 }}
-          exit={{ y: "-100%" }}
-          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 w-full h-screen bg-[#ff2a2a] z-[100000] flex items-center justify-center"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: easeCinematic }}
+          className="fixed inset-0 w-full h-screen bg-[#050505] z-[100000] flex items-center justify-center pointer-events-none"
         >
-          {/* Logo Container */}
-          <motion.div 
-            exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="relative text-5xl md:text-7xl font-black tracking-tighter"
-          >
-            {/* Background text (empty state) */}
-            <div className="text-red-900/30">
-              {personalInfo.brandName}<span className="text-red-900/30">.</span>
+          {/* Main Cinematic Container */}
+          <div className="relative flex flex-col items-center justify-center w-full max-w-sm md:max-w-lg">
+            
+            {/* 2 & 3. Extending champagne-gold line */}
+            <motion.div
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ duration: 1.0, ease: easeCinematic }}
+              className="absolute top-1/2 left-0 right-0 h-[1px] bg-[var(--color-luxury-gold)] opacity-40 z-10 origin-center"
+            />
+
+            {/* Top Half: NILADRI */}
+            <div className="overflow-hidden w-full flex justify-center pb-3">
+               <motion.div
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5, ease: easeCinematic }}
+                  className="relative text-4xl md:text-5xl font-extrabold text-[var(--color-luxury-text-primary)] tracking-[0.2em] md:tracking-[0.3em] uppercase leading-none"
+               >
+                 NILADRI
+                 {/* 6. Subtle gold glow passing across */}
+                 <motion.div
+                    initial={{ x: "-100%" }}
+                    animate={{ x: "200%" }}
+                    transition={{ duration: 1.2, delay: 1.0, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--color-luxury-gold)] to-transparent opacity-40 mix-blend-screen pointer-events-none"
+                 />
+               </motion.div>
             </div>
 
-            {/* Foreground text (water fill state) */}
-            <motion.div 
-              className="absolute top-0 left-0 text-white overflow-hidden whitespace-nowrap"
-              initial={{ clipPath: 'inset(100% 0 0 0)' }}
-              animate={{ clipPath: 'inset(0% 0 0 0)' }}
-              transition={{ duration: 1.6, ease: "easeInOut", delay: 0.2 }}
-            >
-              {personalInfo.brandName}<span className="text-black">.</span>
-            </motion.div>
-          </motion.div>
-
+            {/* Bottom Half: TEWARI outline */}
+            <div className="overflow-hidden w-full flex justify-center pt-3">
+               <motion.div
+                  initial={{ y: "-100%", opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.8, ease: easeCinematic }}
+                  className="text-xl md:text-2xl font-extrabold tracking-[0.4em] md:tracking-[0.5em] uppercase text-transparent leading-none"
+                  style={{ WebkitTextStroke: '1px var(--color-luxury-gold-dark)' }}
+               >
+                 TEWARI
+               </motion.div>
+            </div>
+            
+            {/* 9. Subtle technical gold lines extending */}
+            <motion.div
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 0.2 }}
+              transition={{ duration: 1.0, delay: 1.1, ease: easeCinematic }}
+              className="absolute top-[-20px] right-[25%] w-[1px] h-[50px] bg-[var(--color-luxury-gold)] origin-bottom"
+            />
+            <motion.div
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 0.2 }}
+              transition={{ duration: 1.0, delay: 1.2, ease: easeCinematic }}
+              className="absolute bottom-[-20px] left-[25%] w-[1px] h-[40px] bg-[var(--color-luxury-gold)] origin-top"
+            />
+            
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
