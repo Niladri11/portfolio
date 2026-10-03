@@ -1,4 +1,5 @@
 import React from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import Preloader from './components/Preloader'
 import CustomCursor from './components/CustomCursor'
 import Navbar from './components/Navbar'
@@ -27,6 +28,7 @@ function App() {
       <Certifications />
       <Contact />
       <Footer />
+      <Analytics />
     </>
   )
 }
